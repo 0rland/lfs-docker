@@ -1,0 +1,14 @@
+FROM lfs:09
+
+COPY coreutils.getcwd-path-max.patch $LFS/sources/
+
+# coreutils
+RUN tar -xf $LFS/sources/coreutils-8.29.tar.xz -C /tmp/ && \
+  pushd /tmp/coreutils-8.29 && \
+  patch -Np1 -i $LFS/sources/coreutils.getcwd-path-max.patch && \
+  ./configure --prefix=/tools --enable-install-program=hostname && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/coreutils-*
+

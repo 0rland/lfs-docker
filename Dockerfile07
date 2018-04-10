@@ -1,0 +1,28 @@
+FROM lfs:06
+
+# Linux API Headers
+RUN tar -xf $LFS/sources/linux-4.15.3.tar.xz -C /tmp/ && \
+  pushd /tmp/linux-4.15.3 && \
+  make mrproper && \
+  make INSTALL_HDR_PATH=dest headers_install && \
+  cp -rv dest/include/* /tools/include && \
+  popd && \
+  rm -rf /tmp/linux-*
+  
+# Glibc
+RUN tar -xf $LFS/sources/glibc-2.27.tar.xz -C /tmp/ && \
+  pushd /tmp/glibc-2.27 && \
+  mkdir -v build && \
+  cd build && \
+  ../configure \
+      --prefix=/tools \
+      --host=$LFS_TGT \
+      --build=$(../scripts/config.guess) \
+      --enable-kernel=3.2 \
+      --with-headers=/tools/include \
+      libc_cv_forced_unwind=yes \
+      libc_cv_c_cleanup=yes && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/glibc-*

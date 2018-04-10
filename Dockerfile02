@@ -1,0 +1,4 @@
+FROM lfs:01
+
+RUN apt-get update \
+    && apt-get install -y wget build-essential bison gawk m4 texinfo

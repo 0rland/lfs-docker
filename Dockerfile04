@@ -1,0 +1,23 @@
+FROM lfs:03
+MAINTAINER alex
+
+# add lfs user/group
+RUN groupadd lfs \
+    && useradd -s /bin/bash -g lfs -m -k /dev/null lfs \
+    && echo "lfs:lfs" | chpasswd \
+    && chown -v lfs $LFS/tools \
+    && chown -v lfs $LFS/sources
+
+COPY .bash_profile /home/lfs
+COPY .bashrc /home/lfs
+
+RUN chown -v lfs /home/lfs/.bash_profile \
+    && chown -v lfs /home/lfs/.bashrc
+
+USER lfs
+
+ENV LC_ALL=POSIX \
+  LFS_TGT=x86_64-lfs-linux-gnu \
+  PATH=/tools/bin:/bin:/usr/bin
+
+

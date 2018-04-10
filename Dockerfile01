@@ -1,0 +1,6 @@
+FROM debian:jessie
+
+COPY version-check.sh /
+
+RUN rm -rf /bin/sh \
+    && ln -s /bin/bash /bin/sh

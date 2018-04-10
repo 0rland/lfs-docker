@@ -1,0 +1,151 @@
+FROM lfs:10
+
+# diffutils
+RUN tar -xf $LFS/sources/diffutils-3.6.tar.xz -C /tmp/ && \
+  pushd /tmp/diffutils-3.6 && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/diffutils*
+
+# file
+RUN tar -xf $LFS/sources/file-5.32.tar.gz -C /tmp/ && \
+  pushd /tmp/file-5.32 && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/file*
+
+# findutils
+RUN tar -xf $LFS/sources/findutils-4.6.0.tar.gz -C /tmp/ && \
+  pushd /tmp/findutils-4.6.0 && \
+  patch -Np1 -i $LFS/sources/coreutils.getcwd-path-max.patch && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/findutils*
+
+# gawk
+RUN tar -xf $LFS/sources/gawk-4.2.0.tar.xz -C /tmp/ && \
+  pushd /tmp/gawk-4.2.0 && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/gawk*
+
+# gettext
+RUN tar -xf $LFS/sources/gettext-0.19.8.1.tar.xz -C /tmp/ && \
+  pushd /tmp/gettext-0.19.8.1 && \
+  cd gettext-tools && \
+  EMACS="no" ./configure --prefix=/tools --disable-shared && \
+  make -C gnulib-lib && \
+  make -C intl pluralx.c && \
+  make -C src msgfmt && \
+  make -C src msgmerge && \
+  make -C src xgettext && \
+  cp -v src/{msgfmt,msgmerge,xgettext} /tools/bin && \
+  popd && \
+  rm -rf /tmp/gettext*
+
+# grep
+RUN tar -xf $LFS/sources/grep-3.1.tar.xz -C /tmp/ && \
+  pushd /tmp/grep-3.1 && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/grep*
+
+# gzip
+RUN tar -xf $LFS/sources/gzip-1.9.tar.xz -C /tmp/ && \
+  pushd /tmp/gzip-1.9 && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/gzip*
+
+# make
+RUN tar -xf $LFS/sources/make-4.2.1.tar.bz2 -C /tmp/ && \
+  pushd /tmp/make-4.2.1 && \
+  sed -i '211,217 d; 219,229 d; 232 d' glob/glob.c && \
+  ./configure --prefix=/tools --without-guile && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/make*
+
+# patch
+RUN tar -xf $LFS/sources/patch-2.7.6.tar.xz -C /tmp/ && \
+  pushd /tmp/patch-2.7.6 && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/patch*
+
+# perl
+RUN tar -xf $LFS/sources/perl-5.26.1.tar.xz -C /tmp/ && \
+  pushd /tmp/perl-5.26.1 && \
+  sh Configure -des -Dprefix=/tools -Dlibs=-lm && \
+  make && \
+  cp -v perl cpan/podlators/scripts/pod2man /tools/bin && \
+  mkdir -pv /tools/lib/perl5/5.26.1 && \
+  cp -Rv lib/* /tools/lib/perl5/5.26.1 && \
+  popd && \
+  rm -rf /tmp/perl*
+
+# sed
+RUN tar -xf $LFS/sources/sed-4.4.tar.xz -C /tmp/ && \
+  pushd /tmp/sed-4.4 && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/sed*
+
+# tar
+RUN tar -xf $LFS/sources/tar-1.30.tar.xz -C /tmp/ && \
+  pushd /tmp/tar-1.30 && \
+  patch -Np1 -i $LFS/sources/coreutils.getcwd-path-max.patch && \  
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/tar*
+
+# texinfo
+RUN tar -xf $LFS/sources/texinfo-6.5.tar.xz -C /tmp/ && \
+  pushd /tmp/texinfo-6.5 && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/texinfotar*
+
+# unit-linux
+RUN tar -xf $LFS/sources/util-linux-2.31.1.tar.xz -C /tmp/ && \
+  pushd /tmp/util-linux-2.31.1 && \
+  ./configure --prefix=/tools                \
+            --without-python               \
+            --disable-makeinstall-chown    \
+            --without-systemdsystemunitdir \
+            --without-ncurses              \
+            PKG_CONFIG="" && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/util-linux*
+
+# xz
+RUN tar -xf $LFS/sources/xz-5.2.3.tar.xz -C /tmp/ && \
+  pushd /tmp/xz-5.2.3 && \
+  ./configure --prefix=/tools && \
+  make && \
+  make install && \
+  popd && \
+  rm -rf /tmp/xz*
